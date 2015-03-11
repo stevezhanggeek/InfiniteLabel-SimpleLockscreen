@@ -1,0 +1,17 @@
+apply plugin: 'android-library'
+apply from: '../maven_push.gradle'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "20"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+
+    }
+}
+
+dependencies {
+    compile 'com.nineoldandroids:library:2.4.0'
+}
