@@ -220,10 +220,9 @@ public class SampleActivity extends Activity implements SensorEventListener {
                 switch(target) {
                     case 1:
                         socketWrite("SwipeUp", 0, 0);
-
                         glowPad.reset(true);
-                        v.setVisibility(View.GONE);
-                        finish();
+//                        v.setVisibility(View.GONE);
+//                        finish();
                         break;
                 }
             }

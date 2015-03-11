@@ -44,6 +44,7 @@ import net.frakbot.glowpadbackport.util.Const;
 import net.frakbot.glowpadbackport.util.TimeInterpolator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /** A re-usable widget containing a center, outer ring and wave animation. */
 public class GlowPadView extends View {
@@ -600,6 +601,7 @@ public class GlowPadView extends View {
     private void internalSetTargetResources(int resourceId) {
         final ArrayList<TargetDrawable> targets = loadDrawableArray(resourceId);
         mTargetDrawables = targets;
+        Collections.rotate(mTargetDrawables, -1);
         mTargetResourceId = resourceId;
 
         int maxWidth = mHandleDrawable.getWidth();
