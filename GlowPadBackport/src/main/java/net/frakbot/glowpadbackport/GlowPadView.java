@@ -98,6 +98,8 @@ public class GlowPadView extends View {
     private static final float RING_SCALE_EXPANDED = 1.0f;
     private static final float RING_SCALE_COLLAPSED = 0.5f;
 
+    private ArrayList<TargetDrawable> mTargetDrawables_backup = new ArrayList<TargetDrawable>();
+
     private ArrayList<TargetDrawable> mTargetDrawables = new ArrayList<TargetDrawable>();
     private AnimationBundle mWaveAnimations = new AnimationBundle();
     private AnimationBundle mTargetAnimations = new AnimationBundle();
@@ -601,7 +603,7 @@ public class GlowPadView extends View {
     private void internalSetTargetResources(int resourceId) {
         final ArrayList<TargetDrawable> targets = loadDrawableArray(resourceId);
         mTargetDrawables = targets;
-        Collections.rotate(mTargetDrawables, -1);
+        mTargetDrawables_backup = (ArrayList<TargetDrawable>)targets.clone();;
         mTargetResourceId = resourceId;
 
         int maxWidth = mHandleDrawable.getWidth();
@@ -757,6 +759,12 @@ public class GlowPadView extends View {
         hideTargets(animate, false);
         hideGlow(0, 0, 0.0f, null);
         Tweener.reset();
+    }
+
+    public void changeUnlockPosition(int position) {
+        mTargetDrawables = (ArrayList<TargetDrawable>)mTargetDrawables_backup.clone();
+        Collections.swap(mTargetDrawables, 1, position);
+//        Collections.rotate(mTargetDrawables, position);
     }
 
     private void startBackgroundAnimation(int duration, float alpha) {
