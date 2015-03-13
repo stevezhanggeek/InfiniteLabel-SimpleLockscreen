@@ -19,9 +19,10 @@ import com.parse.Parse;
 
 import net.frakbot.glowpadbackport.GlowPadView;
 
-public class NaturalActivity extends Activity implements SensorEventListener {
+public class LockscreenActivity extends Activity implements SensorEventListener {
     private int[] gestureList = {1,3};
     private int indexCurrentGesture = 0;
+    private boolean isPromptSession = false;
 
     // Sensor
     SensorManager mSensorManager;
@@ -56,6 +57,14 @@ public class NaturalActivity extends Activity implements SensorEventListener {
 
         Parse.initialize(this, "9DNSMkDuMcOv0Mi918JSe1CfMlkBPQ9UJVp8ksQB", "Qo53m1lBF7kXzbdP0OJ8bbL1OH6AuJnZbFRyOI4K");
         Utility.initParameters();
+        Intent myIntent = getIntent();
+        String naturalOrPrompt = myIntent.getStringExtra("naturalOrPrompt");
+        if (naturalOrPrompt != null && naturalOrPrompt.equals("prompt")) {
+            int[] tempGestureList = {0,1,3,2,0,2,2,1};
+            gestureList = tempGestureList;
+            isPromptSession = true;
+            Utility.parseWrite("Start Prompt Session");
+        }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mGyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -103,6 +112,9 @@ public class NaturalActivity extends Activity implements SensorEventListener {
                 }
 
                 if (indexCurrentGesture == gestureList.length) {
+                    if (isPromptSession) {
+                        Utility.parseWrite("Finish Prompt Session");
+                    }
                     v.setVisibility(View.GONE);
                     finish();
                 } else {
