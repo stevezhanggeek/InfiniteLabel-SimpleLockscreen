@@ -51,10 +51,7 @@ public class Utility extends Activity {
     }
 
     public static void socketWrite(final String action, final int deltaX, final int deltaY, final SensorEvent accEvent) {
-        ParseObject parseObj = new ParseObject("InfiniteLabel");
-        parseObj.put("deviceID", deviceID);
-        parseObj.put("action", action);
-        parseObj.saveInBackground();
+        parseWrite(action);
 
         new Thread(new Runnable() {
             @Override
@@ -73,11 +70,17 @@ public class Utility extends Activity {
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+    public static void parseWrite(final String action) {
+        ParseObject parseObj = new ParseObject("InfiniteLabel");
+        parseObj.put("deviceID", deviceID);
+        parseObj.put("action", action);
+        parseObj.saveInBackground();
     }
 
     public static String gestureNumToString(int gesture) {
