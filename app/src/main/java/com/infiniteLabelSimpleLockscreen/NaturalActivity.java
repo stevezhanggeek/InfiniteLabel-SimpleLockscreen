@@ -20,6 +20,9 @@ import com.parse.Parse;
 import net.frakbot.glowpadbackport.GlowPadView;
 
 public class NaturalActivity extends Activity implements SensorEventListener {
+    private int[] gestureList = {1,3};
+    private int indexCurrentGesture = 0;
+
     // Sensor
     SensorManager mSensorManager;
     Sensor mGyroSensor, mAccSensor;
@@ -39,12 +42,6 @@ public class NaturalActivity extends Activity implements SensorEventListener {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Utility.initParameters();
-    }
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +54,7 @@ public class NaturalActivity extends Activity implements SensorEventListener {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.main);
 
+        Parse.initialize(this, "9DNSMkDuMcOv0Mi918JSe1CfMlkBPQ9UJVp8ksQB", "Qo53m1lBF7kXzbdP0OJ8bbL1OH6AuJnZbFRyOI4K");
         Utility.initParameters();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -78,29 +76,38 @@ public class NaturalActivity extends Activity implements SensorEventListener {
         RelativeLayout ll = (RelativeLayout) findViewById(R.id.main);
         ll.setBackground(wallpaperDrawable);
 
-        // Enable Local Datastore.
-        //Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "9DNSMkDuMcOv0Mi918JSe1CfMlkBPQ9UJVp8ksQB", "Qo53m1lBF7kXzbdP0OJ8bbL1OH6AuJnZbFRyOI4K");
+        final TextView txt = (TextView) findViewById(R.id.textView);
+        txt.setText("First, please swipe " + Utility.gestureNumToString(gestureList[0]));
+        glowPad.changeUnlockPosition(gestureList[0]);
 
         glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
+            String sleepiness_description = "";
             @Override
             public void onGrabbed(View v, int handle) {
-                System.out.println("Start Touch");
+                glowPad.changeUnlockPosition(gestureList[indexCurrentGesture]);
             }
 
             @Override
             public void onReleased(View v, int handle) {
+                if (indexCurrentGesture < gestureList.length) {
+                    glowPad.changeUnlockPosition(gestureList[indexCurrentGesture]);
+                }
             }
 
             @Override
             public void onTrigger(View v, int target) {
-                switch(target) {
-                    case 1:
-                        Utility.socketWrite("SwipeUp", 0, 0, accEvent);
-                        glowPad.reset(true);
-                        v.setVisibility(View.GONE);
-                        finish();
-                        break;
+                if (target == gestureList[indexCurrentGesture]) {
+                    Utility.socketWrite(Utility.gestureNumToString(target), 0, 0, accEvent);
+                    glowPad.reset(true);
+                    indexCurrentGesture++;
+                }
+
+                if (indexCurrentGesture == gestureList.length) {
+                    v.setVisibility(View.GONE);
+                    finish();
+                } else {
+                    sleepiness_description = "Next, please swipe " +  Utility.gestureNumToString(gestureList[indexCurrentGesture]);
+                    txt.setText(sleepiness_description);
                 }
             }
 
@@ -115,15 +122,10 @@ public class NaturalActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onMovedOnTarget(int target) {
-                final TextView txt = (TextView) findViewById(R.id.textView);
-                String sleepiness_description = "";
-                switch(target) {
-                    case 1:
-                        sleepiness_description = "Unlock";
-                        break;
-                    default:
-                        sleepiness_description = "Please Swipe Up to Unlock";
-                        break;
+                if (target == gestureList[indexCurrentGesture]) {
+                    sleepiness_description = "Correct";
+                } else {
+                    sleepiness_description = "Wrong gesture, please swipe " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
                 }
                 txt.setText(sleepiness_description);
             }

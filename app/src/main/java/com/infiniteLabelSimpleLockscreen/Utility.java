@@ -1,60 +1,22 @@
 package com.infiniteLabelSimpleLockscreen;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.WallpaperManager;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
-import net.frakbot.glowpadbackport.GlowPadView;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
-
-
-public class Utility {
+public class Utility extends Activity {
     private static String HOST = "";
     private static int PORT = 8888;
     private static Socket socket = null;
@@ -74,13 +36,18 @@ public class Utility {
     }
 
     public static void initParameters() {
-        new HttpAsyncTask().execute("http://www.xiaoyizhang.me/Research/infiniteLabel.json");
-        deviceID = Utility.getUniquePsuedoID();
-    }
-
-    public static void setServerIP(String ip) {
-        HOST = ip;
-        System.out.println(HOST);
+        deviceID = getUniquePsuedoID();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Parameters");
+        query.getInBackground("G9vWUL34Sa", new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    HOST = object.getString("IP_Address");
+                    System.out.println(HOST);
+                } else {
+                    // something went wrong
+                }
+            }
+        });
     }
 
     public static void socketWrite(final String action, final int deltaX, final int deltaY, final SensorEvent accEvent) {

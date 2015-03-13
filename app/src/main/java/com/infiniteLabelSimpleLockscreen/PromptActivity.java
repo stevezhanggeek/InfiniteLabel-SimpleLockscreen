@@ -53,7 +53,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-
 public class PromptActivity extends Activity implements SensorEventListener {
     private int[] gestureList = {0,1,3,2,0,2,2,1};
     private int indexCurrentGesture = 0;
@@ -89,6 +88,7 @@ public class PromptActivity extends Activity implements SensorEventListener {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.main);
 
+        Parse.initialize(this, "9DNSMkDuMcOv0Mi918JSe1CfMlkBPQ9UJVp8ksQB", "Qo53m1lBF7kXzbdP0OJ8bbL1OH6AuJnZbFRyOI4K");
         Utility.initParameters();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -109,10 +109,6 @@ public class PromptActivity extends Activity implements SensorEventListener {
         final GlowPadView glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         RelativeLayout ll = (RelativeLayout) findViewById(R.id.main);
         ll.setBackground(wallpaperDrawable);
-
-        // Enable Local Datastore.
-        //Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "9DNSMkDuMcOv0Mi918JSe1CfMlkBPQ9UJVp8ksQB", "Qo53m1lBF7kXzbdP0OJ8bbL1OH6AuJnZbFRyOI4K");
 
         final TextView txt = (TextView) findViewById(R.id.textView);
         txt.setText("First, please swipe " + Utility.gestureNumToString(gestureList[0]));
