@@ -33,22 +33,28 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
-    <net.frakbot.glowpadbackport.GlowPadView
-        android:id="@+id/incomingCallWidget"
+    <com.infiniteLabelSimpleLockscreen.LocusPassWordView
+        android:id="@+id/mLocusPassWordView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-
-        app:targetDrawables="@array/incoming_call_widget_2way_targets"
-        app:handleDrawable="@drawable/ic_in_call_touch_handle"
-        app:innerRadius="@dimen/glowpadview_inner_radius"
-        app:outerRadius="@dimen/glowpadview_target_placement_radius"
-        app:outerRingDrawable="@drawable/ic_lockscreen_outerring"
-        app:snapMargin="@dimen/glowpadview_snap_margin"
-        app:vibrationDuration="20"
-        app:feedbackCount="1"
-        app:glowRadius="@dimen/glowpadview_glow_radius"
-        app:pointDrawable="@drawable/ic_lockscreen_glowdot"
         android:layout_below="@+id/textClock" />
 
-</RelativeLayout>
+    <!--     <net.frakbot.glowpadbackport.GlowPadView
+            android:id="@+id/incomingCallWidget"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/textClock"
+
+            app:targetDrawables="@array/incoming_call_widget_2way_targets"
+            app:handleDrawable="@drawable/ic_in_call_touch_handle"
+            app:innerRadius="@dimen/glowpadview_inner_radius"
+            app:outerRadius="@dimen/glowpadview_target_placement_radius"
+            app:outerRingDrawable="@drawable/ic_lockscreen_outerring"
+            app:snapMargin="@dimen/glowpadview_snap_margin"
+            app:vibrationDuration="20"
+            app:feedbackCount="1"
+            app:glowRadius="@dimen/glowpadview_glow_radius"
+            app:pointDrawable="@drawable/ic_lockscreen_glowdot"/>
+    -->
+    </RelativeLayout>

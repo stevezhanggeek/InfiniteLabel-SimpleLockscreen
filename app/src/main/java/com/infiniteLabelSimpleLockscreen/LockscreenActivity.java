@@ -102,12 +102,31 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
         // Use user desktop wallpaper in lockscreen
         final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         final Drawable wallpaperDrawable = wallpaperManager.getFastDrawable();
-        final GlowPadView glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
+//        final GlowPadView glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         RelativeLayout ll = (RelativeLayout) findViewById(R.id.main);
         ll.setBackground(wallpaperDrawable);
 
         final TextView txt = (TextView) findViewById(R.id.textView);
         txt.setText("First, please swipe " + Utility.gestureNumToString(gestureList[0]));
+
+        final LocusPassWordView complexPasswordView;
+
+        complexPasswordView = (LocusPassWordView) this.findViewById(R.id.mLocusPassWordView);
+        complexPasswordView.setOnCompleteListener(new LocusPassWordView.OnCompleteListener() {
+            @Override
+            public void onComplete(String mPassword) {
+                System.out.println(mPassword);
+                if (mPassword.equals("0,1,2,3,4,5,6,7,8")) {
+                    finish();
+                } else {
+                    //Wrong password
+                    complexPasswordView.reset();
+                }
+            }
+        });
+
+
+        /*
         glowPad.changeUnlockPosition(gestureList[0]);
 
         glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
@@ -163,5 +182,6 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                 txt.setText(sleepiness_description);
             }
         });
+        */
     }
 }
