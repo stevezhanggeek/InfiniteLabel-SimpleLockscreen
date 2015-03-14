@@ -1,8 +1,10 @@
 package com.infiniteLabelSimpleLockscreen;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -64,6 +66,25 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
             gestureList = tempGestureList;
             isPromptSession = true;
             Utility.parseWrite("Start Prompt Session");
+/*
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+*/
+            new AlertDialog.Builder(this)
+                    .setTitle("Start Prompt Session")
+                    .setMessage("You will need to perform 20 gestures.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
