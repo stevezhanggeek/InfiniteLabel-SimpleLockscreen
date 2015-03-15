@@ -58,7 +58,7 @@ public class Utility extends Activity {
             public void run() {
                 // TODO Auto-generated method stub
                 try {
-                    System.out.println("InfiniteLabel-" + action);
+                    System.out.println(action);
                     socket = new Socket(HOST, PORT);
                     out = new PrintWriter(socket.getOutputStream(), true);
                     out.write(action + ", ");
@@ -86,13 +86,13 @@ public class Utility extends Activity {
     public static String gestureNumToString(int gesture) {
         switch(gesture) {
             case 0:
-                return "RIGHT";
+                return "SwipeRight";
             case 1:
-                return "UP";
+                return "SwipeUp";
             case 2:
-                return "LEFT";
+                return "SwipeLeft";
             case 3:
-                return "DOWN";
+                return "SwipeDown";
             default:
                 return "";
         }

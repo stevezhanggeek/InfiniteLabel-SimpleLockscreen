@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.infiniteLabelSimpleLockscreen.util.BitmapUtil;
 import com.infiniteLabelSimpleLockscreen.util.MathUtil;
 import com.infiniteLabelSimpleLockscreen.util.Point;
-import com.infiniteLabelSimpleLockscreen.util.StringUtil;
 
 /**
  * 

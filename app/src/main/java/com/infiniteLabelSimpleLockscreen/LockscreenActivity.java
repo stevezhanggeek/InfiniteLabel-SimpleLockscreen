@@ -62,7 +62,7 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
         Intent myIntent = getIntent();
         String naturalOrPrompt = myIntent.getStringExtra("naturalOrPrompt");
         if (naturalOrPrompt != null && naturalOrPrompt.equals("prompt")) {
-            int[] tempGestureList = {0,1,3,2,0,2,2,1};
+            int[] tempGestureList = {0,1,3,2,2,0,1,3,3,1,0,2,2,3,0,1,1,3,2,0};
             gestureList = tempGestureList;
             isPromptSession = true;
             Utility.parseWrite("Start Prompt Session");
@@ -102,31 +102,37 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
         // Use user desktop wallpaper in lockscreen
         final WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         final Drawable wallpaperDrawable = wallpaperManager.getFastDrawable();
-//        final GlowPadView glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
+        final GlowPadView glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         RelativeLayout ll = (RelativeLayout) findViewById(R.id.main);
         ll.setBackground(wallpaperDrawable);
 
         final TextView txt = (TextView) findViewById(R.id.textView);
-        txt.setText("First, please swipe " + Utility.gestureNumToString(gestureList[0]));
+        txt.setText("First, please " + Utility.gestureNumToString(gestureList[0]));
 
         final LocusPassWordView complexPasswordView;
-
         complexPasswordView = (LocusPassWordView) this.findViewById(R.id.mLocusPassWordView);
+        complexPasswordView.setVisibility(View.INVISIBLE);
         complexPasswordView.setOnCompleteListener(new LocusPassWordView.OnCompleteListener() {
+            String complex_instruction = "";
             @Override
             public void onComplete(String mPassword) {
                 System.out.println(mPassword);
-                if (mPassword.equals("0,1,2,3,4,5,6,7,8")) {
+                if (mPassword.equals("3,0,1,2,5")) {
+                    if (isPromptSession) {
+                        Utility.socketWrite("Prompt-ComplexGesture", 0, 0, accEvent);
+                    } else {
+                        Utility.socketWrite("ComplexGesture", 0, 0, accEvent);
+                    }
                     finish();
                 } else {
                     //Wrong password
+                    complex_instruction = "Wrong password, please retry";
+                    txt.setText(complex_instruction);
                     complexPasswordView.reset();
                 }
             }
         });
 
-
-        /*
         glowPad.changeUnlockPosition(gestureList[0]);
 
         glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
@@ -146,7 +152,11 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
             @Override
             public void onTrigger(View v, int target) {
                 if (target == gestureList[indexCurrentGesture]) {
-                    Utility.socketWrite(Utility.gestureNumToString(target), 0, 0, accEvent);
+                    if (isPromptSession) {
+                        Utility.socketWrite("Prompt-" + Utility.gestureNumToString(target), 0, 0, accEvent);
+                    } else {
+                        Utility.socketWrite(Utility.gestureNumToString(target), 0, 0, accEvent);
+                    }
                     glowPad.reset(true);
                     indexCurrentGesture++;
                 }
@@ -156,9 +166,11 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                         Utility.parseWrite("Finish Prompt Session");
                     }
                     v.setVisibility(View.GONE);
-                    finish();
+                    //finish();
+                    txt.setText("Gesture Password");
+                    complexPasswordView.setVisibility(View.VISIBLE);
                 } else {
-                    sleepiness_description = "Next, please swipe " +  Utility.gestureNumToString(gestureList[indexCurrentGesture]);
+                    sleepiness_description = "Next, please " +  Utility.gestureNumToString(gestureList[indexCurrentGesture]);
                     txt.setText(sleepiness_description);
                 }
             }
@@ -177,11 +189,10 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                 if (target == gestureList[indexCurrentGesture]) {
                     sleepiness_description = "Correct";
                 } else {
-                    sleepiness_description = "Wrong gesture, please swipe " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
+                    sleepiness_description = "Wrong gesture, please " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
                 }
                 txt.setText(sleepiness_description);
             }
         });
-        */
     }
 }
