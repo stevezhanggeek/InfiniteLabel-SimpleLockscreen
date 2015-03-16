@@ -21,6 +21,8 @@ import com.parse.Parse;
 
 import net.frakbot.glowpadbackport.GlowPadView;
 
+import java.util.concurrent.TimeUnit;
+
 public class LockscreenActivity extends Activity implements SensorEventListener {
     private int[] gestureList = {1,3};
     private int indexCurrentGesture = 0;
@@ -159,6 +161,15 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                     }
                     glowPad.reset(true);
                     indexCurrentGesture++;
+                    try {
+                        //txt.setText("Please wait for 2 seconds");
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch ( InterruptedException r ) {
+                    }
+                    if (indexCurrentGesture < gestureList.length) {
+                        sleepiness_description = "Next, please " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
+                        txt.setText(sleepiness_description);
+                    }
                 }
 
                 if (indexCurrentGesture == gestureList.length) {
@@ -169,9 +180,6 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                     //finish();
                     txt.setText("Gesture Password");
                     complexPasswordView.setVisibility(View.VISIBLE);
-                } else {
-                    sleepiness_description = "Next, please " +  Utility.gestureNumToString(gestureList[indexCurrentGesture]);
-                    txt.setText(sleepiness_description);
                 }
             }
 
