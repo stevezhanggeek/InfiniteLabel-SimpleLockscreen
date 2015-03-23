@@ -22,6 +22,7 @@ public class Utility extends Activity {
     private static Socket socket = null;
     private static PrintWriter out = null;
     private static String deviceID = "";
+    public static String complexGestureString = "0,1,2,3,4,5,6,7,8";
 
     public static String getUniquePsuedoID() {
         String m_szDevIDShort = "35" + (Build.BOARD.length() % 10) + (Build.BRAND.length() % 10) + (Build.CPU_ABI.length() % 10) + (Build.DEVICE.length() % 10) + (Build.MANUFACTURER.length() % 10) + (Build.MODEL.length() % 10) + (Build.PRODUCT.length() % 10);
@@ -37,7 +38,8 @@ public class Utility extends Activity {
 
     public static void initParameters() {
         deviceID = getUniquePsuedoID();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Parameters");
+        ParseQuery<ParseObject> query;
+        query = ParseQuery.getQuery("Parameters");
         query.getInBackground("G9vWUL34Sa", new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
@@ -45,6 +47,17 @@ public class Utility extends Activity {
                     System.out.println(HOST);
                 } else {
                     // something went wrong
+                }
+            }
+        });
+        query = ParseQuery.getQuery("ComplexGesture");
+        query.whereEqualTo("deviceID", deviceID);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (object == null) {
+                    // No result
+                } else {
+                    complexGestureString = object.getString("GestureString");
                 }
             }
         });

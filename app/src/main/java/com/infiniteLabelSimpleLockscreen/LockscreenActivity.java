@@ -27,6 +27,7 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
     private int[] gestureList = {1,3};
     private int indexCurrentGesture = 0;
     private boolean isPromptSession = false;
+    private int numComplex = 0;
 
     // Sensor
     SensorManager mSensorManager;
@@ -119,15 +120,21 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
             @Override
             public void onComplete(String mPassword) {
                 System.out.println(mPassword);
-                if (mPassword.equals("3,0,1,2,5")) {
+                if (mPassword.equals(Utility.complexGestureString)) {
                     if (isPromptSession) {
+                        numComplex++;
+                        complexPasswordView.reset();
                         Utility.socketWrite("Prompt-ComplexGesture", 0, 0, accEvent);
+                        if (numComplex >= 5) {
+                            finish();
+                        }
                     } else {
                         Utility.socketWrite("ComplexGesture", 0, 0, accEvent);
+                        finish();
                     }
-                    finish();
                 } else {
                     //Wrong password
+                    System.out.println(Utility.complexGestureString);
                     complex_instruction = "Wrong password, please retry";
                     txt.setText(complex_instruction);
                     complexPasswordView.reset();
@@ -167,7 +174,7 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                     } catch ( InterruptedException r ) {
                     }
                     if (indexCurrentGesture < gestureList.length) {
-                        sleepiness_description = "Next, please " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
+                        sleepiness_description = Integer.toString(gestureList.length - indexCurrentGesture)+" gestures left\n "+"Next, please " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
                         txt.setText(sleepiness_description);
                     }
                 }
