@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class Utility extends Activity {
@@ -75,6 +77,8 @@ public class Utility extends Activity {
                     socket = new Socket(HOST, PORT);
                     out = new PrintWriter(socket.getOutputStream(), true);
                     out.write(action + ", ");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                    out.write(dateFormat.format(new Date()) + ", ");
                     out.write(Float.toString(accEvent.values[0]) + ", " + Float.toString(accEvent.values[1]) + ", " + Float.toString(accEvent.values[2]) + ", ");
                     out.write(String.valueOf(deltaX) + ", " + String.valueOf(deltaY));
                     out.flush();
