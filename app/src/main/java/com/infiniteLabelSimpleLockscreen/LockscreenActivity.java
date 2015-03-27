@@ -28,6 +28,7 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
     private int indexCurrentGesture = 0;
     private boolean isPromptSession = false;
     private int numComplex = 0;
+    private int w = 0;
 
     // Sensor
     SensorManager mSensorManager;
@@ -64,8 +65,8 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
         Utility.initParameters();
         Intent myIntent = getIntent();
         String naturalOrPrompt = myIntent.getStringExtra("naturalOrPrompt");
-        if (naturalOrPrompt != null && naturalOrPrompt.equals("prompt")) {
-            int[] tempGestureList = {0,1,3,2,2,0,1,3,3,1,0,2,2,3,0,1,1,3,2,0};
+        if (true || naturalOrPrompt != null && naturalOrPrompt.equals("prompt")) {
+            int[] tempGestureList = {1,2,3,0,3,0,2,1,2,1,0,3,2,3,1,0,1,0,3,2};
             gestureList = tempGestureList;
             isPromptSession = true;
             Utility.parseWrite("Start Prompt Session");
@@ -123,8 +124,15 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                 if (mPassword.equals(Utility.complexGestureString)) {
                     if (isPromptSession) {
                         numComplex++;
+                        complex_instruction = 5 - numComplex + " Gesture Password Left";
+                        txt.setText(complex_instruction);
                         complexPasswordView.reset();
                         Utility.socketWrite("Prompt-ComplexGesture", 0, 0, accEvent);
+                        try {
+                            //txt.setText("Please wait for 2 seconds");
+                            TimeUnit.SECONDS.sleep(2);
+                        } catch ( InterruptedException r ) {
+                        }
                         if (numComplex >= 5) {
                             finish();
                         }
@@ -176,6 +184,19 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                     if (indexCurrentGesture < gestureList.length) {
                         sleepiness_description = Integer.toString(gestureList.length - indexCurrentGesture)+" gestures left\n "+"Next, please " + Utility.gestureNumToString(gestureList[indexCurrentGesture]);
                         txt.setText(sleepiness_description);
+                        if (w == 0) w = glowPad.getWidth();
+                        RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)glowPad.getLayoutParams();
+                        if (gestureList[indexCurrentGesture] == 0) {
+                            p.leftMargin = -w/2; // in PX
+                            p.rightMargin = 0;
+                            glowPad.setLayoutParams(p);
+                        } else if (gestureList[indexCurrentGesture] == 2) {
+                            p.leftMargin = w/2 + w/5; // in PX
+                            glowPad.setLayoutParams(p);
+                        } else {
+                            p.leftMargin = 0;
+                            glowPad.setLayoutParams(p);
+                        }
                     }
                 }
 
