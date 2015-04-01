@@ -188,13 +188,19 @@ public class LockscreenActivity extends Activity implements SensorEventListener 
                         RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)glowPad.getLayoutParams();
                         if (gestureList[indexCurrentGesture] == 0) {
                             p.leftMargin = -w/2; // in PX
-                            p.rightMargin = 0;
+                            p.topMargin = 0;
                             glowPad.setLayoutParams(p);
                         } else if (gestureList[indexCurrentGesture] == 2) {
                             p.leftMargin = w/2 + w/5; // in PX
+                            p.topMargin = 0;
+                            glowPad.setLayoutParams(p);
+                        } else if (gestureList[indexCurrentGesture] == 1) {
+                            p.leftMargin = 0;
+                            p.topMargin = w/4;
                             glowPad.setLayoutParams(p);
                         } else {
                             p.leftMargin = 0;
+                            p.topMargin = -w/4;
                             glowPad.setLayoutParams(p);
                         }
                     }
